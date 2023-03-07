@@ -82,10 +82,7 @@ $(GENERATE_UNBOUND_METHODS_EXAMPLE_SRCS): $(GENERATE_UNBOUND_METHODS_EXAMPLE_SPE
 		$(EXAMPLE_CLIENT_DIR)/generateunboundmethods/git_push.sh
 
 install:
-	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1.0
-	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.27.1
-	go install github.com/bufbuild/buf/cmd/buf@v0.51.1
-
+	go install github.com/bufbuild/buf/cmd/buf@v1.14.0
 	go install \
 		./protoc-gen-openapiv2 \
 		./protoc-gen-grpc-gateway
@@ -118,6 +115,22 @@ proto:
 	buf generate \
 		--template ./examples/internal/proto/examplepb/use_go_template.buf.gen.yaml \
 		--path examples/internal/proto/examplepb/use_go_template.proto
+	buf generate \
+		--template ./examples/internal/proto/examplepb/visibility_rule_preview_echo_service.buf.gen.yaml \
+		--path examples/internal/proto/examplepb/visibility_rule_echo_service.proto
+	mv examples/internal/proto/examplepb/visibility_rule_echo_service.swagger.json examples/internal/proto/examplepb/visibility_rule_preview_echo_service.swagger.json
+	buf generate \
+		--template ./examples/internal/proto/examplepb/visibility_rule_internal_echo_service.buf.gen.yaml \
+		--path examples/internal/proto/examplepb/visibility_rule_echo_service.proto
+	mv examples/internal/proto/examplepb/visibility_rule_echo_service.swagger.json examples/internal/proto/examplepb/visibility_rule_internal_echo_service.swagger.json
+	buf generate \
+		--template ./examples/internal/proto/examplepb/visibility_rule_none_echo_service.buf.gen.yaml \
+		--path examples/internal/proto/examplepb/visibility_rule_echo_service.proto
+	mv examples/internal/proto/examplepb/visibility_rule_echo_service.swagger.json examples/internal/proto/examplepb/visibility_rule_none_echo_service.swagger.json
+	buf generate \
+		--template ./examples/internal/proto/examplepb/visibility_rule_preview_and_internal_echo_service.buf.gen.yaml \
+		--path examples/internal/proto/examplepb/visibility_rule_echo_service.proto
+	mv examples/internal/proto/examplepb/visibility_rule_echo_service.swagger.json examples/internal/proto/examplepb/visibility_rule_preview_and_internal_echo_service.swagger.json
 
 generate: proto $(ECHO_EXAMPLE_SRCS) $(ABE_EXAMPLE_SRCS) $(UNANNOTATED_ECHO_EXAMPLE_SRCS) $(RESPONSE_BODY_EXAMPLE_SRCS) $(GENERATE_UNBOUND_METHODS_EXAMPLE_SRCS)
 
